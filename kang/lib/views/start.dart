@@ -13,8 +13,9 @@ class MyAppPage extends StatefulWidget {
 class _MyAppPageState extends State<MyAppPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AutoTabsRouter(
-      routes: [HomeRoute(), ProfileRoute(), SearchRoute()],
+      routes: [const HomeRoute(), const ProfileRoute(), const SearchRoute()],
       builder: (context, child) {
         final tabRouter = AutoTabsRouter.of(context);
         return Scaffold(
@@ -32,15 +33,18 @@ class _MyAppPageState extends State<MyAppPage> {
               },
             ),
             bottomNavigationBar: NavigationBar(
+              labelBehavior:
+                  NavigationDestinationLabelBehavior.onlyShowSelected,
               onDestinationSelected: tabRouter.setActiveIndex,
               selectedIndex: tabRouter.activeIndex,
-              indicatorColor: Colors.red,
-              destinations: [
-                NavigationDestination(icon: Icon(Icons.home), label: "home"),
+              indicatorColor: theme.colorScheme.secondaryContainer,
+              destinations: const [
                 NavigationDestination(
-                    icon: Icon(Icons.search), label: "search"),
+                    icon: Icon(Icons.agriculture), label: "home"),
                 NavigationDestination(
-                    icon: Icon(Icons.person_2_outlined), label: "profile"),
+                    icon: Icon(Icons.travel_explore_rounded), label: "search"),
+                NavigationDestination(
+                    icon: Icon(Icons.person), label: "profile"),
               ],
             ));
       },
