@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:kang/main.dart';
 import 'package:kang/router.dart';
 
 @RoutePage()
 class MyAppPage extends StatefulWidget {
+  const MyAppPage({super.key});
+
   @override
   State<MyAppPage> createState() => _MyAppPageState();
 }
@@ -15,7 +15,7 @@ class _MyAppPageState extends State<MyAppPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AutoTabsRouter(
-      routes: [const HomeRoute(), const SearchRoute(), const ProfileRoute()],
+      routes: const [HomeRoute(), ProfileRoute(), SearchRoute()],
       builder: (context, child) {
         final tabRouter = AutoTabsRouter.of(context);
         return Scaffold(
