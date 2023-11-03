@@ -17,7 +17,7 @@ load_dotenv()
 
 # mongodb
 from pymongo import MongoClient
-mongodb_atlas_url="mongodb+srv://pavan:password123%40mongodatabase@cluster0.xwrngu0.mongodb.net"
+mongodb_atlas_url=os.getenv("MONGODB_ATLAS_URL")
 client=MongoClient(mongodb_atlas_url)
 
 
@@ -26,6 +26,12 @@ from fastapi.staticfiles import StaticFiles
 
 # middlewares
 from fastapi.middleware.cors import CORSMiddleware
+
+
+# load model
+import tensorflow as tf
+from tensorflow import keras
+model = keras.models.load_model("my_model.h5")
 
 app = FastAPI()
 
@@ -98,3 +104,21 @@ async def get_weather(weather: Weather):
     cityName=data["name"]
     country=data["sys"]["country"]
     return {"desc":desc,"temp":temp,"pressure":pressure,"humidity":humidity,"visibility":visibility,"windspeed":windspeed,"cityName":cityName,"country":country}
+
+class NISARModel(BaseModel):
+   sar_vh: float
+   sar_vv: float
+   incidence_angle: float
+   
+@app.get('/predict_soil_moisture')
+async def get_soil_moisture(nisarmodel:NISARModel):
+   print(nisarmodel)
+   sar_vh=nisarmodel.sar_vh
+   sar_vv=nisarmodel.sar_vv
+   incidence_angle=nisarmodel.incidence_angle
+   input_data = [[sar_vh, sar_vv, incidence_angle]]
+   predictions = model.predict(input_data)
+   predicted_moisture = predictions[0][0]
+   predicted_moisture=float(predicted_moisture)
+   print(f'Predicted Moisture Content: {predicted_moisture}')
+   return {"soil_moisture": predicted_moisture}

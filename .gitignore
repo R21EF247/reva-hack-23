@@ -2,3 +2,6 @@ demo.py
 packets.txt
 __pycache__
 .env
+temp.py
+temp1.py
+model.pkl
