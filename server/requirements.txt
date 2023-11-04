@@ -1,0 +1,9 @@
+jinja2
+aiofiles
+pymongo
+python-dotenv
+fastapi
+uvicorn
+starlette
+requests
+tensorflow
