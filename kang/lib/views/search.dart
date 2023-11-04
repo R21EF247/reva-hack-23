@@ -38,34 +38,94 @@ class _SearchPageState extends State<SearchPage> {
               Positioned(
                 top: size.height * 0.08,
                 left: size.width * 0.07,
-                child: Container(
-                  height: size.height * 0.06,
-                  width: size.width * 0.84,
-                  decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Row(
+                child: SizedBox(
+                  height: size.height * 0.36,
+                  width: size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      Container(
                         height: size.height * 0.06,
-                        width: size.width * 0.70,
-                        child: TextFormField(
-                          controller: controller,
-                          onTap: () => onEdit(context),
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search),
-                            border: InputBorder.none,
-                            hintText: 'Enter Area',
-                          ),
+                        width: size.width * 0.84,
+                        decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: size.height * 0.06,
+                              width: size.width * 0.70,
+                              child: TextFormField(
+                                controller: controller,
+                                onTap: () => onEdit(context),
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.search),
+                                  border: InputBorder.none,
+                                  hintText: 'Enter Area',
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    mapSize = mapSize == 0.6 ? 1 : 0.6;
+                                  });
+                                },
+                                icon: Icon(Icons.tune))
+                          ],
                         ),
                       ),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              mapSize = mapSize == 0.5 ? 1 : 0.5;
-                            });
-                          },
-                          icon: Icon(Icons.tune))
+                      SizedBox(
+                        height: 60 * mapSize,
+                      ),
+                      SizedBox(
+                        width: size.width * 0.83,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text("Edit date"),
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6))),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: Text("Make default"),
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6))),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.83,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FilterChip(
+                                label: Text('rice'),
+                                onSelected: (bool selected) {}),
+                            FilterChip(
+                                label: Text('wheat'),
+                                onSelected: (bool selected) {}),
+                            FilterChip(
+                                label: Text('corn'),
+                                onSelected: (bool selected) {}),
+                            FilterChip(
+                                label: Text('pea'),
+                                onSelected: (bool selected) {}),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(0.7, 0),
+                        child: ElevatedButton(
+                            onPressed: () {}, child: Text("Submit")),
+                      )
                     ],
                   ),
                 ),
@@ -73,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
               Positioned(
                 bottom: 0,
                 child: AnimatedContainer(
-                  curve: Curves.ease,
+                  curve: Curves.easeIn,
                   width: size.width,
                   height: size.height * 0.78 * mapSize,
                   duration: Duration(milliseconds: 100),
