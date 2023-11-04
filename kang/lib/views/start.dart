@@ -15,7 +15,7 @@ class _MyAppPageState extends State<MyAppPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AutoTabsRouter(
-      routes: const [HomeRoute(), ProfileRoute(), SearchRoute()],
+      routes: const [HomeRoute(), SearchRoute(), ProfileRoute()],
       builder: (context, child) {
         final tabRouter = AutoTabsRouter.of(context);
         return Scaffold(

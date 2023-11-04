@@ -1,6 +1,13 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'package:kang/constants/const.dart';
+
+GoogleMapsPlaces _places =
+    GoogleMapsPlaces(apiKey: ConstantValues.GmapApiKey());
 
 @RoutePage()
 class SearchPage extends StatefulWidget {
@@ -14,7 +21,8 @@ class _SearchPageState extends State<SearchPage> {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     double mapSize = size.height * 0.78;
-
+    TextEditingController controller = TextEditingController();
+    onEdit(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.primary,
       extendBodyBehindAppBar: true,
@@ -28,8 +36,10 @@ class _SearchPageState extends State<SearchPage> {
               decoration: BoxDecoration(
                   color: theme.colorScheme.secondaryContainer,
                   borderRadius: BorderRadius.circular(12)),
-              child: const TextField(
-                decoration: InputDecoration(
+              child: TextFormField(
+                controller: controller,
+                onChanged: (value) => onEdit(context),
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.search),
                   border: InputBorder.none,
                   hintText: 'Enter Area',
@@ -60,5 +70,20 @@ class _SearchPageState extends State<SearchPage> {
         ]),
       ),
     );
+  }
+
+  Future<void> onEdit(BuildContext context) async {
+    var kGoogleApiKey = ConstantValues.GmapApiKey();
+    Prediction? p = await PlacesAutocomplete.show(
+        offset: 0,
+        radius: 1000,
+        types: [],
+        strictbounds: false,
+        region: "ar",
+        context: context,
+        apiKey: kGoogleApiKey,
+        mode: Mode.overlay, // Mode.fullscreen
+        language: "en",
+        components: [Component(Component.country, "pk")]);
   }
 }
