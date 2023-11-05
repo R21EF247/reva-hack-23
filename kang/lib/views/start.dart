@@ -15,23 +15,26 @@ class _MyAppPageState extends State<MyAppPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AutoTabsRouter(
-      routes: const [HomeRoute(), ProfileRoute(), SearchRoute()],
+      routes: const [HomeRoute(), SearchRoute(), ProfileRoute()],
       builder: (context, child) {
         final tabRouter = AutoTabsRouter.of(context);
         return Scaffold(
-            body: GestureDetector(
-              child: child,
-              onHorizontalDragEnd: (details) {
-                int activeIndex = tabRouter.activeIndex;
-                if (details.primaryVelocity != 0) {
-                  if (details.primaryVelocity! > 0 && activeIndex > 0) {
-                    tabRouter.setActiveIndex(activeIndex - 1);
-                  } else if (details.primaryVelocity! < 0 && activeIndex < 2) {
-                    tabRouter.setActiveIndex(activeIndex + 1);
-                  }
-                }
-              },
-            ),
+            body: tabRouter.activeIndex != 1
+                ? GestureDetector(
+                    child: child,
+                    onHorizontalDragEnd: (details) {
+                      int activeIndex = tabRouter.activeIndex;
+                      if (details.primaryVelocity != 0) {
+                        if (details.primaryVelocity! > 0 && activeIndex > 0) {
+                          tabRouter.setActiveIndex(activeIndex - 1);
+                        } else if (details.primaryVelocity! < 0 &&
+                            activeIndex < 2) {
+                          tabRouter.setActiveIndex(activeIndex + 1);
+                        }
+                      }
+                    },
+                  )
+                : child,
             bottomNavigationBar: NavigationBar(
               labelBehavior:
                   NavigationDestinationLabelBehavior.onlyShowSelected,

@@ -12,6 +12,18 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 150,
         backgroundColor: theme.colorScheme.surface,
+        leadingWidth: 100,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(vertical: .0),
+          child: SizedBox(
+            width: 50, // Set your desired width for the image
+            height: 30, // Set your desired height for the image
+            child: Image.asset(
+              "assets/agrifusion.jpg",
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
         title: Text(
           'Good Morning',
           style: theme.textTheme.headlineLarge,
