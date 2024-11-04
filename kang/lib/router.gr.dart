@@ -15,16 +15,22 @@ abstract class _$AutoRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    DisplayRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DisplayPage(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: HomePage(),
+        child: const HomePage(),
       );
     },
     MyAppRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: MyAppPage(),
+        child: const MyAppPage(),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -34,12 +40,30 @@ abstract class _$AutoRouter extends RootStackRouter {
       );
     },
     SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SearchPage(),
+        child: SearchPage(
+          key: args.key,
+          position: args.position,
+        ),
       );
     },
   };
+}
+
+/// generated route for
+/// [DisplayPage]
+class DisplayRoute extends PageRouteInfo<void> {
+  const DisplayRoute({List<PageRouteInfo>? children})
+      : super(
+          DisplayRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DisplayRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -86,14 +110,37 @@ class ProfileRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SearchPage]
-class SearchRoute extends PageRouteInfo<void> {
-  const SearchRoute({List<PageRouteInfo>? children})
-      : super(
+class SearchRoute extends PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({
+    Key? key,
+    required LatLng? position,
+    List<PageRouteInfo>? children,
+  }) : super(
           SearchRoute.name,
+          args: SearchRouteArgs(
+            key: key,
+            position: position,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'SearchRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SearchRouteArgs> page = PageInfo<SearchRouteArgs>(name);
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({
+    this.key,
+    required this.position,
+  });
+
+  final Key? key;
+
+  final LatLng? position;
+
+  @override
+  String toString() {
+    return 'SearchRouteArgs{key: $key, position: $position}';
+  }
 }

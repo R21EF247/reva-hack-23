@@ -1,183 +1,116 @@
 import 'dart:developer';
-
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kang/constants/const.dart';
-
-GoogleMapsPlaces _places =
-    GoogleMapsPlaces(apiKey: ConstantValues.GmapApiKey());
+import 'package:kang/repos/test_repo.dart';
+import 'package:latlong2/latlong.dart';
 
 @RoutePage()
-class SearchPage extends StatefulWidget {
+class SearchPage extends ConsumerStatefulWidget {
+  LatLng? position;
+
+  SearchPage({super.key, required this.position});
+
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchPageState extends ConsumerState<SearchPage> {
   double mapSize = 1;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final theme = Theme.of(context);
-
-    TextEditingController controller = TextEditingController();
-
-    return Scaffold(
-      backgroundColor: theme.colorScheme.primary,
-      extendBodyBehindAppBar: true,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: size.height * 0.98,
-          child: Stack(
-            children: [
-              Positioned(
-                top: size.height * 0.08,
-                left: size.width * 0.07,
-                child: SizedBox(
-                  height: size.height * 0.36,
-                  width: size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: size.height * 0.06,
-                        width: size.width * 0.84,
-                        decoration: BoxDecoration(
-                            color: theme.colorScheme.secondaryContainer,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: size.height * 0.06,
-                              width: size.width * 0.70,
-                              child: TextFormField(
-                                controller: controller,
-                                onTap: () => onEdit(context),
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.search),
-                                  border: InputBorder.none,
-                                  hintText: 'Enter Area',
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    mapSize = mapSize == 0.6 ? 1 : 0.6;
-                                  });
-                                },
-                                icon: Icon(Icons.tune))
-                          ],
+    final call = ref.watch(imageServiceProvider(widget.position!));
+    final text = ref.watch(apiServiceProvider(widget.position!));
+    return Material(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Weather Details'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              context.router.pop();
+            },
+          ),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Center(
+                child: call.when(
+                  data: (test) {
+                    return FlutterMap(
+                      options: MapOptions(center: widget.position, zoom: 11.5),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName: 'com.example.app',
                         ),
-                      ),
-                      SizedBox(
-                        height: 60 * mapSize,
-                      ),
-                      SizedBox(
-                        width: size.width * 0.83,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text("Edit date"),
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6))),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: Text("Make default"),
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6))),
-                            ),
+                        CurrentLocationLayer(),
+                        OverlayImageLayer(
+                          overlayImages: [
+                            OverlayImage(
+                                opacity: 0.74,
+                                bounds: LatLngBounds(
+                                    LatLng(widget.position!.latitude + 0.1,
+                                        widget.position!.longitude - 0.1),
+                                    LatLng(widget.position!.latitude - 0.1,
+                                        widget.position!.longitude + 0.1)),
+                                imageProvider: MemoryImage(test!, scale: 20))
                           ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: size.width * 0.83,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FilterChip(
-                                label: Text('rice'),
-                                onSelected: (bool selected) {}),
-                            FilterChip(
-                                label: Text('wheat'),
-                                onSelected: (bool selected) {}),
-                            FilterChip(
-                                label: Text('corn'),
-                                onSelected: (bool selected) {}),
-                            FilterChip(
-                                label: Text('pea'),
-                                onSelected: (bool selected) {}),
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: const Alignment(0.7, 0),
-                        child: ElevatedButton(
-                            onPressed: () {}, child: Text("Submit")),
-                      )
-                    ],
-                  ),
+                        )
+                      ],
+                    );
+                  },
+                  error: (err, stactrace) {
+                    return Container(
+                      child: Text(err.toString()),
+                    );
+                  },
+                  loading: () => CircularProgressIndicator(),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                child: AnimatedContainer(
-                  curve: Curves.easeIn,
-                  width: size.width,
-                  height: size.height * 0.78 * mapSize,
-                  duration: Duration(milliseconds: 100),
-                  child: const ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(34),
-                        topRight: Radius.circular(34)),
-                    child: Align(
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(45.521563, -122.677433),
-                          zoom: 11,
-                        ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey[200],
+              ),
+              child: text.when(
+                data: ((data) {
+                  return SizedBox(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Text(
+                        data.greeting!,
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-                ),
+                  );
+                }),
+                error: (err, stactrace) {
+                  return Container(
+                    child: Text(err.toString()),
+                  );
+                },
+                loading: () {
+                  return Center(child: CircularProgressIndicator());
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  Future<void> onEdit(BuildContext context) async {
-    var kGoogleApiKey = ConstantValues.GmapApiKey();
-    try {
-      Prediction? p = await PlacesAutocomplete.show(
-        offset: 0,
-        radius: 1000,
-        types: [],
-        strictbounds: false,
-        context: context,
-        apiKey: kGoogleApiKey,
-        mode: Mode.overlay, // Mode.fullscreen
-        language: "en",
-        components: [Component(Component.country, "us")],
-      );
-
-      // Handle the response, e.g., update the UI or move to the next screen
-    } catch (e) {
-      // Handle the error, e.g., show a toast or a dialog
-      log("Error occurred: $e");
-    }
   }
 }

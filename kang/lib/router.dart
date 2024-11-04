@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/widgets.dart';
 import 'package:kang/views/homepage.dart';
 import 'package:kang/views/search.dart';
 import 'package:kang/views/profile.dart';
 import 'package:kang/views/start.dart';
+import 'package:kang/views/DisplayPage.dart';
+import 'package:latlong2/latlong.dart';
 part 'router.gr.dart';
 
 @AutoRouterConfig()
@@ -11,8 +14,9 @@ class AutoRouter extends _$AutoRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: MyAppRoute.page, path: "/", initial: true, children: [
           AutoRoute(page: HomeRoute.page, path: "home"),
-          AutoRoute(page: SearchRoute.page, path: "search"),
+          AutoRoute(page: DisplayRoute.page, path: "displayImage"),
           AutoRoute(page: ProfileRoute.page, path: "profile"),
         ]),
+        AutoRoute(page: SearchRoute.page, path: "/search"),
       ];
 }
