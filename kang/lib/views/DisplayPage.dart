@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kang/repos/test_repo.dart';
 import 'package:kang/router.dart';
@@ -57,13 +56,11 @@ class _DisplayPageState extends State<DisplayPage> {
                         markers.add(Marker(
                             point: chosenPostion ??
                                 LatLng(position.latitude, position.longitude),
-                            builder: (context) {
-                              return Icon(Icons.location_on, color: Colors.red);
-                            }));
+                            child:Icon(Icons.location_on, color: Colors.red)));
                       });
                     },
-                    center: LatLng(position.latitude, position.longitude),
-                    zoom: 7.5,
+                    initialCenter: LatLng(position.latitude, position.longitude),
+                    minZoom: 7.5,
                   ),
                   children: [
                     TileLayer(

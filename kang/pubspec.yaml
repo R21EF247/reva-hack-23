@@ -30,10 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  auto_route: ^7.8.4
+  auto_route: ^8.1.4
   sleek_circular_slider: ^2.0.1
   google_maps_flutter: ^2.5.0
-  flutter_google_places: ^0.3.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,23 +43,20 @@ dependencies:
   json_annotation: ^4.9.0
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
-  flutter_osm_plugin: ^0.70.1
-  flutter_map: any
-  flutter_map_location_marker: any
+  flutter_map: ^7.0.2
+  flutter_map_location_marker: ^9.1.1
   latlong2: any
-  geolocator: ^9.0.2
+  geolocator: ^13.0.1
   http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  auto_route_generator: ^7.1.1
+  auto_route_generator: ^8.0.0
   build_runner: ^2.4.9
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   riverpod_generator: ^2.4.0
-  custom_lint: ^0.0.16
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

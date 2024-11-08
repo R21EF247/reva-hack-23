@@ -45,7 +45,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 child: call.when(
                   data: (test) {
                     return FlutterMap(
-                      options: MapOptions(center: widget.position, zoom: 11.5),
+                      options: MapOptions(initialCenter: widget.position!, minZoom: 11.5),
                       children: [
                         TileLayer(
                           urlTemplate:
